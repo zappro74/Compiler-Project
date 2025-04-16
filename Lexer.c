@@ -15,6 +15,22 @@ typedef enum
     TOKEN_ERROR  
 } TokenType;
 
+typedef struct 
+{
+    const char *keyword;
+    TokenType type;
+} Keyword; //making a keyword struct for a keyword table
+
+static const Keyword keywords[] //keyword table, used in the read_identifier() method to distinguish keyword from identifier.
+{
+    {"if", TOKEN_KEYWORD_IF},
+    {"else", TOKEN_KEYWORD_ELSE},
+    {"for", TOKEN_KEYWORD_FOR},
+    {"while", TOKEN_KEYWORD_WHILE},
+    {"do", TOKEN_KEWORD_DO},
+    {"return", TOKEN_KEYWORD_RETURN},
+}
+
 typedef struct
 {
     TokenType type; //Find what token it is
@@ -83,4 +99,9 @@ void skip_whitespace(Lexer *lexer)
     {
         advance(lexer);
     }
+}
+
+Token* read_identifier(Lexer *lexer)
+{
+    
 }
