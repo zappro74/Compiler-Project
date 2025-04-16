@@ -21,7 +21,8 @@ typedef struct
     TokenType type;
 } Keyword; //making a keyword struct for a keyword table
 
-static const Keyword keywords[] //keyword table, used in the read_identifier() method to distinguish keyword from identifier.
+//keyword table, used in the read_identifier() method to distinguish keyword from identifier.
+static const Keyword keywords[] //keywords cannot be used as an identifier. identifiers are variables that are named whatever besides these keywords.
 {
     {"if", TOKEN_KEYWORD_IF},
     {"else", TOKEN_KEYWORD_ELSE},
@@ -29,6 +30,18 @@ static const Keyword keywords[] //keyword table, used in the read_identifier() m
     {"while", TOKEN_KEYWORD_WHILE},
     {"do", TOKEN_KEWORD_DO},
     {"return", TOKEN_KEYWORD_RETURN},
+    {"new", TOKEN_KEYWORD_NEW},
+    {"switch", TOKEN_KEYWORD_SWITCH},
+    {"continue", TOKEN_KEYWORD_CONTINUE},
+    {"abstract", TOKEN_KEYWORD_ABSTRACT},
+    {"default", TOKEN_KEYWORD_DEFAULT},
+    {"assert", TOKEN_KEYWORD_ASSERT},
+    {"goto", TOKEN_KEYWORD_GOTO},
+    {"package", TOKEN_KEYWORD_PACKAGE},
+    {"synchronized", TOKEN_KEYWORD_SYNCHRONIZED},
+    {"boolean", TOKEN_KEYWORD_BOOLEAN},
+    {"private", TOKEN_KEYWORD_PRIVATE},
+    {"this", TOKEN_KEYWORD_THIS},
 }
 
 typedef struct
