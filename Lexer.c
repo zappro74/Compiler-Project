@@ -76,6 +76,7 @@ static const Keyword keywords[] //keywords cannot be used as an identifier. iden
     {"while", TOKEN_KEYWORD_WHILE}
 }
 
+/*
 static const Number numbers[]
 {
     {"0", TOKEN_NUMBER_ZERO}
@@ -88,7 +89,7 @@ static const Number numbers[]
     {"7", TOKEN_NUMBER_SEVEN}
     {"8", TOKEN_NUMBER_EIGHT}
     {"9", TOKEN_NUMBER_NINE}
-}
+} */
 
 typedef struct
 {
@@ -134,10 +135,10 @@ Token* create_token(TokenType type, char* lexeme, int line, int column) //create
     return token;
 }
 
-Lexer* init_lexer(const char *source) //had to search this one up... will get back to it later
+Lexer* init_lexer(const char *source)
 {
-    Lexer *lexer = (lexer*)malloc(siseof(lexer));
-    if (!Lexer)
+    Lexer *lexer = (Lexer*)malloc(sizeof(Lexer)); //allocate memory for the lexer
+    if (!lexer)
     {
         fprintf(stderr, "memory allocation failed\n");
         exit(1);
@@ -153,7 +154,7 @@ Lexer* init_lexer(const char *source) //had to search this one up... will get ba
 
 void advance(Lexer *lexer)
 {
-    if (lexer -> source[lexer -> current_pos] == \n) //go to the struct lexer and grabs source. Then in the source, find the current position of the new line.
+    if (lexer -> source[lexer -> current_pos] == '\n') //go to the struct lexer and grabs source. Then in the source, find the current position of the new line.
     {
         lexer -> line++; //go to next line
         lexer -> column = 1; //reset column at new line
@@ -209,7 +210,7 @@ Token* read_identifier(Lexer *lexer)
     int start_line = lexer -> line;
     int start_column = lexer -> column;
 
-    while (is_identifier(lexer))
+    while (is_identifier(peek(lexer)))
     {
         advance(lexer);
     }
@@ -238,7 +239,7 @@ Token* read_identifier(Lexer *lexer)
         }
     }
 
-    return create_token(type, lexeme, start_line, start_column)
+    return create_token(type, lexeme, start_line, start_column);
 }
 
 Token* read_number(Lexer *lexer)
@@ -275,18 +276,28 @@ Token* read_number(Lexer *lexer)
     return create_token(type, lexeme, start_line, start_column);
 }
 
-Token* read_string(Lexer *lexer) //FIGURING IT OUT... OKAY
+Token* read_string(Lexer *lexer) //only works for main case so far, no '\n' detection or anything like that
 {
-    if (peek(lexer))
+    if (peek(lexer) != '"')
     {
         return NULL;
     }
+    advance(lexer);
 
     int start_pos = lexer -> current_pos;
     int start_line = lexer -> line;
     int start_column = lexer -> column;
 
-    while (isdigit(peek(lexer)))
+    while (peek(lexer) != '"' && peek(lexer) != '\0') 
+    {
+        advance(lexer);
+    }
+
+    if (peek(lexer) != '"')
+    {
+        return NULL;
+    }
+    else
     {
         advance(lexer);
     }
