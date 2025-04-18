@@ -1,7 +1,7 @@
 #include <stdio.h> // I/O
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h> //for isalpha()/isdigit() function
+#include <ctype.h> //for isalpha()/isdigit() method
 
 typedef enum
 {
@@ -74,6 +74,20 @@ static const Keyword keywords[] //keywords cannot be used as an identifier. iden
     {"native", TOKEN_KEYWORD_NATIVE},
     {"super", TOKEN_KEYWORD_SUPER},
     {"while", TOKEN_KEYWORD_WHILE}
+}
+
+static const Number numbers[]
+{
+    {"0", TOKEN_NUMBER_ZERO}
+    {"1", TOKEN_NUMBER_ONE}
+    {"2", TOKEN_NUMBER_TWO}
+    {"3", TOKEN_NUMBER_THREE}
+    {"4", TOKEN_NUMBER_FOUR}
+    {"5", TOKEN_NUMBER_FIVE}
+    {"6", TOKEN_NUMBER_SIX}
+    {"7", TOKEN_NUMBER_SEVEN}
+    {"8", TOKEN_NUMBER_EIGHT}
+    {"9", TOKEN_NUMBER_NINE}
 }
 
 typedef struct
@@ -190,13 +204,15 @@ Token* read_identifier(Lexer *lexer)
     {
         return NULL;
     }
-  
+    
+    int start_pos = lexer -> current_pos;
+    int start_line = lexer -> line;
+    int start_column = lexer -> column;
+
     while (is_identifier(lexer))
     {
         advance(lexer);
     }
-
-    int start_pos = lexer -> current_pos;
 
     //start of lexme(raw text that forms a token) extraction
     int length = lexer -> current_pos - start_pos;
@@ -213,7 +229,7 @@ Token* read_identifier(Lexer *lexer)
 
     TokenType type = TOKEN_IDENTIFIER; //assuming whats in the lexeme is an identifier
 
-    for (int i = 0; i < sizeof(keywords); i++)
+    for (int i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++)
     {
         if (strcmp(lexeme, keywords[i].keyword) == 0) //compares strings
         {
@@ -222,5 +238,79 @@ Token* read_identifier(Lexer *lexer)
         }
     }
 
-    return create_token(type, lexeme, lexer -> source[lexer -> line], lexer -> source[lexer -> column])
+    return create_token(type, lexeme, start_line, start_column)
+}
+
+Token* read_number(Lexer *lexer)
+{
+    if (!isdigit(peek(lexer)))
+    {
+        return NULL;
+    }
+
+    int start_pos = lexer -> current_pos;
+    int start_line = lexer -> line;
+    int start_column = lexer -> column;
+
+    while (isdigit(peek(lexer)))
+    {
+        advance(lexer);
+    }
+
+    //Extract lexme
+    int length = lexer -> current_pos - start_pos;
+    char *lexeme = malloc(length + 1);
+
+    if (!lexeme)
+    {
+        fprintf(stderr, "Memory error: Could not allocate lexeme\n");
+        return NULL;
+    }
+
+    strncpy(lexeme, lexer -> source + start_pos, length); 
+    lexeme[length] = '\0';
+
+    TokenType type = TOKEN_NUMBER;
+
+    return create_token(type, lexeme, start_line, start_column);
+}
+
+Token* read_string(Lexer *lexer) //FIGURING IT OUT... OKAY
+{
+    if (peek(lexer))
+    {
+        return NULL;
+    }
+
+    int start_pos = lexer -> current_pos;
+    int start_line = lexer -> line;
+    int start_column = lexer -> column;
+
+    while (isdigit(peek(lexer)))
+    {
+        advance(lexer);
+    }
+
+    //Extract lexme
+    int length = lexer -> current_pos - start_pos;
+    char *lexeme = malloc(length + 1);
+
+    if (!lexeme)
+    {
+        fprintf(stderr, "Memory error: Could not allocate lexeme\n");
+        return NULL;
+    }
+
+    strncpy(lexeme, lexer -> source + start_pos, length); 
+    lexeme[length] = '\0';
+
+    TokenType type = TOKEN_STRING;
+
+    return create_token(type, lexeme, start_line, start_column);
+}
+
+
+Token* next_token(Lexer *lexer)
+{
+
 }
