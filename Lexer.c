@@ -31,11 +31,11 @@ int is_keyword(const char *lexeme)
         "const", "float", "native", "super", "while"
     };
     
-    int num_keywords = sizeof(keyword_list) / sizeof(keyword_list[0]);
+    int num_keywords = sizeof(keyword_list) / sizeof(keyword_list[0]); //size of array in bytes / size of single element in bytes == number of elements
 
     for (int i = 0; i < num_keywords; i++) 
     {
-        if (strcmp(lexeme, keyword_list[i]) == 0) 
+        if (strcmp(lexeme, keyword_list[i]) == 0)
         {
             return 1; // Is a keyword
         }
