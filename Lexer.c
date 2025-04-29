@@ -13,83 +13,35 @@ typedef enum
     TOKEN_PUNCTUATION, 
     TOKEN_EOF,         
     TOKEN_ERROR  
-} TokenType;
+} TokenType; 
 
-typedef struct 
+int is_keyword(const char *lexeme) 
 {
-    const char *keyword;
-    TokenType type;
-} Keyword; //making a keyword struct for a keyword table
+    static const char *keyword_list[] = 
+    {
+        "abstract", "continue", "for", "new", "switch",
+        "assert", "default", "goto", "package", "synchronized",
+        "boolean", "do", "if", "private", "this",
+        "break", "double", "implements", "protected", "throw",
+        "byte", "else", "import", "public", "throws",
+        "case", "enum", "instanceof", "return", "transient",
+        "catch", "extends", "int", "short", "try",
+        "char", "final", "interface", "static", "void",
+        "class", "finally", "long", "strictfp", "volatile",
+        "const", "float", "native", "super", "while"
+    };
+    
+    int num_keywords = sizeof(keyword_list) / sizeof(keyword_list[0]);
 
-//keyword table, used in the read_identifier() method to distinguish keyword from identifier.
-static const Keyword keywords[] //keywords cannot be used as an identifier. identifiers are variables that are named whatever besides these keywords.
-{
-    {"abstract", TOKEN_KEYWORD_ABSTRACT},
-    {"continue", TOKEN_KEYWORD_CONTINUE},
-    {"for", TOKEN_KEYWORD_FOR},
-    {"new", TOKEN_KEYWORD_NEW},
-    {"switch", TOKEN_KEYWORD_SWITCH},
-    {"assert", TOKEN_KEYWORD_ASSERT},
-    {"default", TOKEN_KEYWORD_DEFAULT},
-    {"goto", TOKEN_KEYWORD_GOTO},
-    {"package", TOKEN_KEYWORD_PACKAGE},
-    {"synchronized", TOKEN_KEYWORD_SYNCHRONIZED},
-    {"boolean", TOKEN_KEYWORD_BOOLEAN},
-    {"do", TOKEN_KEYWORD_DO},
-    {"if", TOKEN_KEYWORD_IF},
-    {"private", TOKEN_KEYWORD_PRIVATE},
-    {"this", TOKEN_KEYWORD_THIS},
-    {"break", TOKEN_KEYWORD_BREAK},
-    {"double", TOKEN_KEYWORD_DOUBLE},
-    {"implements", TOKEN_KEYWORD_IMPLEMENTS},
-    {"protected", TOKEN_KEYWORD_PROTECTED},
-    {"throw", TOKEN_KEYWORD_THROW},
-    {"byte", TOKEN_KEYWORD_BYTE},
-    {"else", TOKEN_KEYWORD_ELSE},
-    {"import", TOKEN_KEYWORD_IMPORT},
-    {"public", TOKEN_KEYWORD_PUBLIC},
-    {"throws", TOKEN_KEYWORD_THROWS},
-    {"case", TOKEN_KEYWORD_CASE},
-    {"enum", TOKEN_KEYWORD_ENUM},
-    {"instanceof", TOKEN_KEYWORD_INSTANCEOF},
-    {"return", TOKEN_KEYWORD_RETURN},
-    {"transient", TOKEN_KEYWORD_TRANSIENT},
-    {"catch", TOKEN_KEYWORD_CATCH},
-    {"extends", TOKEN_KEYWORD_EXTENDS},
-    {"int", TOKEN_KEYWORD_INT},
-    {"short", TOKEN_KEYWORD_SHORT},
-    {"try", TOKEN_KEYWORD_TRY},
-    {"char", TOKEN_KEYWORD_CHAR},
-    {"final", TOKEN_KEYWORD_FINAL},
-    {"interface", TOKEN_KEYWORD_INTERFACE},
-    {"static", TOKEN_KEYWORD_STATIC},
-    {"void", TOKEN_KEYWORD_VOID},
-    {"class", TOKEN_KEYWORD_CLASS},
-    {"finally", TOKEN_KEYWORD_FINALLY},
-    {"long", TOKEN_KEYWORD_LONG},
-    {"strictfp", TOKEN_KEYWORD_STRICTFP},
-    {"volatile", TOKEN_KEYWORD_VOLATILE},
-    {"const", TOKEN_KEYWORD_CONST},
-    {"float", TOKEN_KEYWORD_FLOAT},
-    {"native", TOKEN_KEYWORD_NATIVE},
-    {"super", TOKEN_KEYWORD_SUPER},
-    {"while", TOKEN_KEYWORD_WHILE}
+    for (int i = 0; i < num_keywords; i++) 
+    {
+        if (strcmp(lexeme, keyword_list[i]) == 0) 
+        {
+            return 1; // Is a keyword
+        }
+    }
+    return 0; // Not a keyword
 }
-
-/*
-static const Number numbers[]
-{
-    {"0", TOKEN_NUMBER_ZERO}
-    {"1", TOKEN_NUMBER_ONE}
-    {"2", TOKEN_NUMBER_TWO}
-    {"3", TOKEN_NUMBER_THREE}
-    {"4", TOKEN_NUMBER_FOUR}
-    {"5", TOKEN_NUMBER_FIVE}
-    {"6", TOKEN_NUMBER_SIX}
-    {"7", TOKEN_NUMBER_SEVEN}
-    {"8", TOKEN_NUMBER_EIGHT}
-    {"9", TOKEN_NUMBER_NINE}
-} */
 
 typedef struct
 {
@@ -181,22 +133,76 @@ int is_whitespace(char c) //check if current position is whitespace
     return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v';
 }
 
-void skip_whitespace(Lexer *lexer)
+int skip_whitespace(Lexer *lexer)
 {
+    int skipped = 0;
     while (is_whitespace(peek(lexer)))
     {
         advance(lexer);
+        skipped = 1;
     }
+    return skipped;
+}
+
+int skip_comment(Lexer *lexer)
+{
+    int skipped = 0;
+    if (peek(lexer) == '/' && (peek_next(lexer) == '/' || peek_next(lexer) == '*'))
+    {
+        int start_line = lexer -> line;
+
+        if (peek_next(lexer) == '/')
+        {
+            advance(lexer); //skip //
+            advance(lexer);
+            while (peek(lexer) != '\n' && peek(lexer) != '\0')
+            {
+                advance(lexer);
+                skipped = 1;
+            }
+        }
+        else
+        {
+            advance(lexer); //skip /*
+            advance(lexer);
+            while (!(peek(lexer) == '*' && peek_next(lexer) == '/'))
+            {
+                if (peek(lexer) == '\0') //this comment could technically go to the EOF
+                {
+                    return skipped;
+                }
+                advance(lexer);
+                skipped = 1;
+            }
+            advance(lexer); //skip */
+            advance(lexer);
+        }
+    }
+    return skipped;
 }
 
 int is_identifier_start(char c)
 {
-    return isalpha(c) || c == "_" || c == '$';
+    return isalpha(c) || c == '_' || c == '$';
 }
 
 int is_identifier(char c)
 {
-    return isalpha(c) || isdigit(c) || c == "_" || c == '$';
+    return isalpha(c) || isdigit(c) || c == '_' || c == '$';
+}
+
+int is_operator(char c)
+{
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '%' ||
+           c == '=' || c == '<' || c == '>' || c == '!' || c == '&' ||
+           c == '|' || c == '^' || c == '~' || c == '?' || c == ':'; 
+}
+
+int is_punctuation(char c)
+{
+    return c == '(' || c == ')' || c == '{' || c == '}' ||
+           c == '[' || c == ']' || c == ';' || c == ',' ||
+           c == '.' || c == '@' || c == ':';
 }
 
 Token* read_identifier(Lexer *lexer)
@@ -228,16 +234,7 @@ Token* read_identifier(Lexer *lexer)
     strncpy(lexeme, lexer -> source + start_pos, length); //copies identifier from the source into lexeme buffer
     lexeme[length] = '\0'; //null termination again
 
-    TokenType type = TOKEN_IDENTIFIER; //assuming whats in the lexeme is an identifier
-
-    for (int i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++)
-    {
-        if (strcmp(lexeme, keywords[i].keyword) == 0) //compares strings
-        {
-            type = keywords[i].type;
-            break;
-        }
-    }
+    TokenType type = is_keyword(lexeme) ? TOKEN_KEYWORD : TOKEN_IDENTIFIER;
 
     return create_token(type, lexeme, start_line, start_column);
 }
@@ -320,8 +317,245 @@ Token* read_string(Lexer *lexer) //only works for main case so far, no '\n' dete
     return create_token(type, lexeme, start_line, start_column);
 }
 
+Token* read_punctuation(Lexer *lexer)
+{
+    if (!is_punctuation(peek(lexer)))
+    {
+        return NULL;
+    }
+
+    int start_pos = lexer->current_pos;
+	int start_line = lexer->line;
+	int start_column = lexer->column;
+    char punc = peek(lexer); //The punctuation character
+
+    advance(lexer);
+
+    //Extract lexme
+    char *lexeme = malloc(2);
+
+    if (!lexeme)
+    {
+        fprintf(stderr, "Memory error: Could not allocate lexeme\n");
+        return NULL;
+    }
+
+    lexeme[0] = punc;
+    lexeme[1] = '\0';
+
+    TokenType type = TOKEN_PUNCTUATION;
+
+    return create_token(type, lexeme, start_line, start_column);
+}
+
+Token* read_operator(Lexer *lexer)
+{
+	if (!is_operator(peek(lexer)))
+	{
+		return NULL;
+	}
+
+	int start_pos = lexer->current_pos;
+	int start_line = lexer->line;
+	int start_column = lexer->column;
+
+	char current = peek(lexer); 
+	char next = peek_next(lexer);
+	char next2 = lexer->source[lexer->current_pos + 2];  // Lookahead for 3-char operators
+
+	int op_length = 1;  // Default to single-char operator
+
+    //the following if statement chain was written by AI because... I aint writing all that.
+	if (current == '=' && next == '=') 
+    {
+		op_length = 2;  // ==
+	} 
+    else if (current == '!' && next == '=') 
+    {
+		op_length = 2;  // !=
+	} 
+    else if (current == '<') 
+    {
+		if (next == '=') 
+        {
+			op_length = 2;  // <=
+		} 
+        else if (next == '<') 
+        {
+			if (next2 == '=') 
+            {
+				op_length = 3;  // <<=
+			} 
+            else 
+            {
+				op_length = 2;  // <<
+			}
+		}
+	} 
+    else if (current == '>') 
+    {
+		if (next == '=') 
+        {
+			op_length = 2;  // >=
+		} 
+        else if (next == '>') 
+        {
+			if (next2 == '=') 
+            {
+				op_length = 3;  // >>=
+			} 
+            else if (lexer->source[lexer->current_pos + 3] == '=') 
+            {
+				op_length = 4;  // >>>=
+			} 
+            else if (next2 == '>') 
+            {
+				op_length = 3;  // >>>
+			} 
+            else 
+            {
+				op_length = 2;  // >>
+			}
+		}
+	} 
+    else if (current == '+' && next == '+') 
+    {
+		op_length = 2;  // ++
+	} 
+    else if (current == '+' && next == '=') 
+    {
+		op_length = 2;  // +=
+	} 
+    else if (current == '-' && next == '-') 
+    {
+		op_length = 2;  // --
+	} 
+    else if (current == '-' && next == '=') 
+    {
+		op_length = 2;  // -=
+	} 
+    else if (current == '*' && next == '=') 
+    {
+		op_length = 2;  // *=
+	} 
+    else if (current == '/' && next == '=') 
+    {
+		op_length = 2;  // /=
+	} 
+    else if (current == '%' && next == '=') 
+    {
+		op_length = 2;  // %=
+	} 
+    else if (current == '&') 
+    {
+		if (next == '&') 
+        {
+			op_length = 2;  // &&
+		} 
+        else if (next == '=') 
+        {
+			op_length = 2;  // &=
+		}
+	} 
+    else if (current == '|') 
+    {
+		if (next == '|') 
+        {
+			op_length = 2;  // ||
+		} 
+        else if (next == '=') 
+        {
+			op_length = 2;  // |=
+		}
+	} 
+    else if (current == '^' && next == '=') 
+    {
+		op_length = 2;  // ^=
+	} 
+    else if (current == ':') 
+    {
+		op_length = 1;  // :
+	} 
+    else if (current == '?') 
+    {
+		op_length = 1;  // ?
+	} 
+    else if (current == '~') 
+    {
+		op_length = 1;  // ~
+	}
+
+	// Advance lexer
+	for (int i = 0; i < op_length; i++) {
+		advance(lexer);
+	}
+
+	// Extract lexeme
+	int length = lexer->current_pos - start_pos;
+	char *lexeme = malloc(length + 1);
+
+	if (!lexeme)
+	{
+		fprintf(stderr, "Memory error: Could not allocate lexeme\n");
+		return NULL;
+	}
+
+	strncpy(lexeme, lexer->source + start_pos, length);
+	lexeme[length] = '\0';
+
+	TokenType type = TOKEN_OPERATOR;
+
+	return create_token(type, lexeme, start_line, start_column);
+}
 
 Token* next_token(Lexer *lexer)
 {
+    while (skip_whitespace(lexer) || skip_comment(lexer))
+    {
+        //this keeps going until there is no whitespace or comments to skip
+        //it's a little wierd, but I wanted to use my skip_whitespace() function :)
+    }
 
+    if (peek(lexer) == '\0')
+    {
+        return create_token(TOKEN_EOF, "End Of File", lexer -> line, lexer -> column);
+    }
+
+    int start_pos = lexer -> current_pos;
+    int start_line = lexer -> line;
+    int start_column = lexer -> column;
+
+    Token* token = read_identifier(lexer);
+    if (token != NULL)
+    {
+        return token;
+    }
+
+    token = read_number(lexer);
+    if (token != NULL)
+    {
+        return token;
+    }
+
+    token = read_string(lexer);
+    if (token != NULL)
+    {
+        return token;
+    }
+
+    token = read_operator(lexer);
+    if (token != NULL)
+    {
+        return token;
+    }
+
+    token = read_punctuation(lexer);
+    if (token != NULL)
+    {
+        return token;
+    }
+    
+    char error_char[2] = { peek(lexer), '\0' }; //This section gives the exact character that caused the error
+    advance(lexer); // Move past said character
+    return create_token(TOKEN_ERROR, error_char, start_line, start_column);
 }
