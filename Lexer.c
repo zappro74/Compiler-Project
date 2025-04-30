@@ -55,9 +55,9 @@ typedef struct
 {
     const char *source; //Whole code
     int current_pos;    //... pretty obvious
-    int line;           //where ma errors at
+    int line;           //where ma tokens at
     int column;
-} Lexer; //detects where errors are in code
+} Lexer; //detects where tokens/errors are in code
 
 void free_token(Token *token) //allows other files to free tokens after they're used. Also prevents leaking memory
 {
