@@ -1,0 +1,92 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.c||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Lexer.c||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.h||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Lexer.h||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Main.c||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Main.c||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Parser.c||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Parser.c||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Main.c",
+              "DocumentMoniker": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Main.c",
+              "RelativeDocumentMoniker": "Main.c",
+              "ToolTip": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Main.c",
+              "RelativeToolTip": "Main.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-04-30T00:06:47.786Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Lexer.c",
+              "DocumentMoniker": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.c",
+              "RelativeDocumentMoniker": "Lexer.c",
+              "ToolTip": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.c",
+              "RelativeToolTip": "Lexer.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-04-30T00:06:39.374Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Lexer.h",
+              "DocumentMoniker": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.h",
+              "RelativeDocumentMoniker": "Lexer.h",
+              "ToolTip": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Lexer.h",
+              "RelativeToolTip": "Lexer.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-30T00:06:46.046Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Parser.c",
+              "DocumentMoniker": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Parser.c",
+              "RelativeDocumentMoniker": "Parser.c",
+              "ToolTip": "C:\\Users\\zachp\\OneDrive\\Documents\\GitHub\\Compiler-Project\\Parser.c",
+              "RelativeToolTip": "Parser.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-04-30T00:06:48.604Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

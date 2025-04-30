@@ -59,6 +59,15 @@ typedef struct
     int column;
 } Lexer; //detects where errors are in code
 
+void free_token(Token *token) //allows other files to free tokens after they're used. Also prevents leaking memory
+{
+    if (token)
+    {
+        free(token -> value);
+        free(token);
+    }
+}
+
 Token* create_token(TokenType type, char* lexeme, int line, int column) //creates a token with the inputs of the TokenType, the raw string, and the location in the source
 {
     Token* token = (Token*)malloc(sizeof(Token));
